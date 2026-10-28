@@ -1,0 +1,318 @@
+{
+  "description": "Expected outcomes for labelled test cases in the sample dataset. Keep this file SEPARATE from input data.",
+  "seed": 42,
+  "start_date": "2025-01-01",
+  "days": 6,
+  "rows_per_day": 20,
+  "labels": [
+    {
+      "order_id": "ORD-000-09002",
+      "case": "duplicate_event",
+      "duplicate_occurrence": 2,
+      "expected_reject_reason": "duplicate_event",
+      "note": "second occurrence of identical (order_id, event_ts, status)",
+      "partition_date": "2025-01-01",
+      "file": "orders_2025-01-01.csv"
+    },
+    {
+      "order_id": "ORD-000-09003",
+      "case": "missing_required_field",
+      "expected_reject_reason": "missing_required_field:customer_id",
+      "partition_date": "2025-01-01",
+      "file": "orders_2025-01-01.csv"
+    },
+    {
+      "order_id": "ORD-000-09004",
+      "case": "invalid_quantity",
+      "expected_reject_reason": "invalid_quantity",
+      "partition_date": "2025-01-01",
+      "file": "orders_2025-01-01.csv"
+    },
+    {
+      "order_id": "ORD-000-09005",
+      "case": "invalid_unit_price",
+      "expected_reject_reason": "invalid_unit_price",
+      "partition_date": "2025-01-01",
+      "file": "orders_2025-01-01.csv"
+    },
+    {
+      "order_id": "ORD-000-09006",
+      "case": "invalid_status",
+      "expected_reject_reason": "invalid_status",
+      "partition_date": "2025-01-01",
+      "file": "orders_2025-01-01.csv"
+    },
+    {
+      "order_id": "ORD-000-09007",
+      "case": "invalid_event_ts",
+      "expected_reject_reason": "invalid_event_ts",
+      "partition_date": "2025-01-01",
+      "file": "orders_2025-01-01.csv"
+    },
+    {
+      "order_id": "ORD-000-09008",
+      "case": "invalid_reference_customer",
+      "expected_reject_reason": "invalid_reference_customer",
+      "partition_date": "2025-01-01",
+      "file": "orders_2025-01-01.csv"
+    },
+    {
+      "order_id": "ORD-000-09009",
+      "case": "invalid_reference_product",
+      "expected_reject_reason": "invalid_reference_product",
+      "partition_date": "2025-01-01",
+      "file": "orders_2025-01-01.csv"
+    },
+    {
+      "order_id": "ORD-000-09010",
+      "case": "late_arriving",
+      "note": "event_ts is on the previous day; row is accepted but flagged as late_arriving",
+      "partition_date": "2025-01-01",
+      "file": "orders_2025-01-01.csv"
+    },
+    {
+      "case": "malformed_row",
+      "expected_reject_reason": "malformed_row",
+      "note": "row with only 3 columns instead of 7",
+      "partition_date": "2025-01-01",
+      "file": "orders_2025-01-01.csv"
+    },
+    {
+      "order_id": "ORD-001-09002",
+      "case": "duplicate_event",
+      "duplicate_occurrence": 2,
+      "expected_reject_reason": "duplicate_event",
+      "note": "second occurrence of identical (order_id, event_ts, status)",
+      "partition_date": "2025-01-02",
+      "file": "orders_2025-01-02.csv"
+    },
+    {
+      "order_id": "ORD-001-09003",
+      "case": "missing_required_field",
+      "expected_reject_reason": "missing_required_field:customer_id",
+      "partition_date": "2025-01-02",
+      "file": "orders_2025-01-02.csv"
+    },
+    {
+      "order_id": "ORD-001-09004",
+      "case": "invalid_quantity",
+      "expected_reject_reason": "invalid_quantity",
+      "partition_date": "2025-01-02",
+      "file": "orders_2025-01-02.csv"
+    },
+    {
+      "order_id": "ORD-001-09005",
+      "case": "invalid_unit_price",
+      "expected_reject_reason": "invalid_unit_price",
+      "partition_date": "2025-01-02",
+      "file": "orders_2025-01-02.csv"
+    },
+    {
+      "order_id": "ORD-001-09006",
+      "case": "invalid_status",
+      "expected_reject_reason": "invalid_status",
+      "partition_date": "2025-01-02",
+      "file": "orders_2025-01-02.csv"
+    },
+    {
+      "order_id": "ORD-001-09007",
+      "case": "invalid_event_ts",
+      "expected_reject_reason": "invalid_event_ts",
+      "partition_date": "2025-01-02",
+      "file": "orders_2025-01-02.csv"
+    },
+    {
+      "order_id": "ORD-001-09008",
+      "case": "invalid_reference_customer",
+      "expected_reject_reason": "invalid_reference_customer",
+      "partition_date": "2025-01-02",
+      "file": "orders_2025-01-02.csv"
+    },
+    {
+      "order_id": "ORD-001-09009",
+      "case": "invalid_reference_product",
+      "expected_reject_reason": "invalid_reference_product",
+      "partition_date": "2025-01-02",
+      "file": "orders_2025-01-02.csv"
+    },
+    {
+      "order_id": "ORD-001-09010",
+      "case": "late_arriving",
+      "note": "event_ts is on the previous day; row is accepted but flagged as late_arriving",
+      "partition_date": "2025-01-02",
+      "file": "orders_2025-01-02.csv"
+    },
+    {
+      "case": "malformed_row",
+      "expected_reject_reason": "malformed_row",
+      "note": "row with only 3 columns instead of 7",
+      "partition_date": "2025-01-02",
+      "file": "orders_2025-01-02.csv"
+    },
+    {
+      "file": "orders_2025-01-03.csv",
+      "case": "schema_mismatch",
+      "expected_partition_status": "FAILED",
+      "reason": "schema_mismatch: missing columns ['status']"
+    },
+    {
+      "order_id": "ORD-003-09002",
+      "case": "duplicate_event",
+      "duplicate_occurrence": 2,
+      "expected_reject_reason": "duplicate_event",
+      "note": "second occurrence of identical (order_id, event_ts, status)",
+      "partition_date": "2025-01-04",
+      "file": "orders_2025-01-04.csv"
+    },
+    {
+      "order_id": "ORD-003-09003",
+      "case": "missing_required_field",
+      "expected_reject_reason": "missing_required_field:customer_id",
+      "partition_date": "2025-01-04",
+      "file": "orders_2025-01-04.csv"
+    },
+    {
+      "order_id": "ORD-003-09004",
+      "case": "invalid_quantity",
+      "expected_reject_reason": "invalid_quantity",
+      "partition_date": "2025-01-04",
+      "file": "orders_2025-01-04.csv"
+    },
+    {
+      "order_id": "ORD-003-09005",
+      "case": "invalid_unit_price",
+      "expected_reject_reason": "invalid_unit_price",
+      "partition_date": "2025-01-04",
+      "file": "orders_2025-01-04.csv"
+    },
+    {
+      "order_id": "ORD-003-09006",
+      "case": "invalid_status",
+      "expected_reject_reason": "invalid_status",
+      "partition_date": "2025-01-04",
+      "file": "orders_2025-01-04.csv"
+    },
+    {
+      "order_id": "ORD-003-09007",
+      "case": "invalid_event_ts",
+      "expected_reject_reason": "invalid_event_ts",
+      "partition_date": "2025-01-04",
+      "file": "orders_2025-01-04.csv"
+    },
+    {
+      "order_id": "ORD-003-09008",
+      "case": "invalid_reference_customer",
+      "expected_reject_reason": "invalid_reference_customer",
+      "partition_date": "2025-01-04",
+      "file": "orders_2025-01-04.csv"
+    },
+    {
+      "order_id": "ORD-003-09009",
+      "case": "invalid_reference_product",
+      "expected_reject_reason": "invalid_reference_product",
+      "partition_date": "2025-01-04",
+      "file": "orders_2025-01-04.csv"
+    },
+    {
+      "order_id": "ORD-003-09010",
+      "case": "late_arriving",
+      "note": "event_ts is on the previous day; row is accepted but flagged as late_arriving",
+      "partition_date": "2025-01-04",
+      "file": "orders_2025-01-04.csv"
+    },
+    {
+      "case": "malformed_row",
+      "expected_reject_reason": "malformed_row",
+      "note": "row with only 3 columns instead of 7",
+      "partition_date": "2025-01-04",
+      "file": "orders_2025-01-04.csv"
+    },
+    {
+      "order_id": "ORD-004-09002",
+      "case": "duplicate_event",
+      "duplicate_occurrence": 2,
+      "expected_reject_reason": "duplicate_event",
+      "note": "second occurrence of identical (order_id, event_ts, status)",
+      "partition_date": "2025-01-05",
+      "file": "orders_2025-01-05.csv"
+    },
+    {
+      "order_id": "ORD-004-09003",
+      "case": "missing_required_field",
+      "expected_reject_reason": "missing_required_field:customer_id",
+      "partition_date": "2025-01-05",
+      "file": "orders_2025-01-05.csv"
+    },
+    {
+      "order_id": "ORD-004-09004",
+      "case": "invalid_quantity",
+      "expected_reject_reason": "invalid_quantity",
+      "partition_date": "2025-01-05",
+      "file": "orders_2025-01-05.csv"
+    },
+    {
+      "order_id": "ORD-004-09005",
+      "case": "invalid_unit_price",
+      "expected_reject_reason": "invalid_unit_price",
+      "partition_date": "2025-01-05",
+      "file": "orders_2025-01-05.csv"
+    },
+    {
+      "order_id": "ORD-004-09006",
+      "case": "invalid_status",
+      "expected_reject_reason": "invalid_status",
+      "partition_date": "2025-01-05",
+      "file": "orders_2025-01-05.csv"
+    },
+    {
+      "order_id": "ORD-004-09007",
+      "case": "invalid_event_ts",
+      "expected_reject_reason": "invalid_event_ts",
+      "partition_date": "2025-01-05",
+      "file": "orders_2025-01-05.csv"
+    },
+    {
+      "order_id": "ORD-004-09008",
+      "case": "invalid_reference_customer",
+      "expected_reject_reason": "invalid_reference_customer",
+      "partition_date": "2025-01-05",
+      "file": "orders_2025-01-05.csv"
+    },
+    {
+      "order_id": "ORD-004-09009",
+      "case": "invalid_reference_product",
+      "expected_reject_reason": "invalid_reference_product",
+      "partition_date": "2025-01-05",
+      "file": "orders_2025-01-05.csv"
+    },
+    {
+      "order_id": "ORD-004-09010",
+      "case": "late_arriving",
+      "note": "event_ts is on the previous day; row is accepted but flagged as late_arriving",
+      "partition_date": "2025-01-05",
+      "file": "orders_2025-01-05.csv"
+    },
+    {
+      "case": "malformed_row",
+      "expected_reject_reason": "malformed_row",
+      "note": "row with only 3 columns instead of 7",
+      "partition_date": "2025-01-05",
+      "file": "orders_2025-01-05.csv"
+    },
+    {
+      "file": "orders_2025-01-06.csv",
+      "case": "empty_file",
+      "expected_partition_status": "SUCCESS",
+      "expected_rows_out": 0,
+      "reason": "empty file (valid empty batch)"
+    },
+    {
+      "order_id": "BAD_ROW",
+      "case": "malformed_row",
+      "expected_reject_reason": "missing_required_field:product_id",
+      "note": "BAD_ROW,missing_cols is a 2-value row; DictReader fills all 7 header columns so it passes the column-count guard, then fails at missing_required_field:product_id (first truly empty required field after order_id+customer_id). Present in each of the 4 valid partitions; test de-dupes by order_id so only one entry needed.",
+      "partition_date": "2025-01-01",
+      "file": "orders_2025-01-01.csv"
+    }
+  ]
+}

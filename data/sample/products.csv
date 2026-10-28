@@ -1,0 +1,16 @@
+product_id,product_name,category
+P0001,Widget A,Electronics
+P0002,Widget B,Electronics
+P0003,Gadget Pro,Electronics
+P0004,Smart Watch,Electronics
+P0005,Running Shoes,Apparel
+P0006,Yoga Mat,Sports
+P0007,Coffee Mug,Kitchen
+P0008,Water Bottle,Kitchen
+P0009,Notebook,Stationery
+P0010,Pen Set,Stationery
+P0011,Desk Lamp,Home
+P0012,Chair Cushion,Home
+P0013,Backpack,Accessories
+P0014,Sunglasses,Accessories
+P0015,Headphones,Electronics
