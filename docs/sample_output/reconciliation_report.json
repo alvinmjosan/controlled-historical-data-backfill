@@ -1,6 +1,6 @@
 {
-  "run_id": "run_20261028T160456Z",
-  "generated_at": "2026-10-28T16:05:03.840367+00:00",
+  "run_id": "run_20261028T174319Z",
+  "generated_at": "2026-10-28T17:43:30.553990+00:00",
   "checks": {
     "partition_row_balance": {
       "description": "rows_in == rows_out + rows_rejected per partition",
@@ -91,11 +91,11 @@
       "description": "Reject reason counts for this run",
       "details": [
         {
-          "reason": "missing_required_field:product_id",
+          "reason": "missing_required_field:customer_id",
           "count": 4
         },
         {
-          "reason": "missing_required_field:customer_id",
+          "reason": "malformed_row",
           "count": 4
         },
         {

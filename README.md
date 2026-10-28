@@ -171,9 +171,12 @@ python -m backfill --source-dir data/sample --start-date 2025-01-01 --end-date 2
 
 ### End-to-end restart demo (inject failure → rerun → status)
 
-**Step 1: Run with injected failure on 2025-01-04**
+**Step 1: Delete the DB, then run with injected failure on 2025-01-04**
 ```bash
-del output\warehouse.db
+# PowerShell:
+Remove-Item output\warehouse.db -ErrorAction SilentlyContinue
+# Linux / Mac:
+# rm -f output/warehouse.db
 python -m backfill --source-dir data/sample --start-date 2025-01-01 --end-date 2025-01-06 --force --inject-failure-date 2025-01-04
 ```
 ```
@@ -215,6 +218,10 @@ partition_date   status   rows_in  rows_out  rejected  error
 2025-01-05       SKIPPED        0         0         0
 2025-01-06       SKIPPED        0         0         0
 ```
+
+> **Note on SKIPPED**: `SKIPPED` means the partition was already `SUCCESS` from an earlier run
+> in the same session and was not reprocessed — data was **not** lost. Use `--force` to
+> reprocess all partitions regardless of prior status.
 
 > **Note**: `--inject-failure-date` only injects a failure if the partition has not already been marked
 > `SUCCESS` in the DB. If you previously ran the pipeline successfully, use `--force` to reprocess
@@ -352,7 +359,7 @@ ORDER BY count DESC;
 
 | reject_reason | count |
 |---|---|
-| missing_required_field:product_id | 4 |
+| malformed_row | 4 |
 | missing_required_field:customer_id | 4 |
 | invalid_unit_price | 4 |
 | invalid_status | 4 |
@@ -488,6 +495,11 @@ Running without `--clean` injects a schema-change partition (day 3) and empty-fi
 *PARTIAL is expected. One partition (schema-change) fails; all others succeed.
 
 See [docs/performance.md](docs/performance.md) for full analysis and threading model discussion.
+
+> **Note**: Throughput figures vary by run and machine (background I/O, OS scheduling, SQLite page
+> cache warm-up). The default-run and clean-run numbers differ because the clean run processes a
+> larger, uniform batch (no schema-change partition to abort early). Use the clean run figures as
+> the authoritative throughput benchmark.
 
 ---
 

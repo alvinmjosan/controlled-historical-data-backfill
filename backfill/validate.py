@@ -119,10 +119,15 @@ def validate_rows(
 
     for row in rows:
         # ----------------------------------------------------------------
-        # Rule 1: malformed row (wrong column count)
+        # Rule 1: malformed row (wrong column count / short row)
         # ----------------------------------------------------------------
-        present_data_cols = [k for k in row if not k.startswith("_")]
-        if len(present_data_cols) < len(ORDERS_REQUIRED_COLUMNS):
+        # _malformed=True is set by extract.py when csv.DictReader filled
+        # missing columns with None (row has fewer fields than the header).
+        # The explicit column-count guard below catches any other case where
+        # the dict was built with fewer keys.
+        if row.get("_malformed") or (
+            len([k for k in row if not k.startswith("_")]) < len(ORDERS_REQUIRED_COLUMNS)
+        ):
             rejected_rows.append(
                 _make_reject(row, source_file, partition_date, "malformed_row", run_id, now_ts)
             )

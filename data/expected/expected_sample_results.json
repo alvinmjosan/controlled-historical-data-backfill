@@ -309,8 +309,8 @@
     {
       "order_id": "BAD_ROW",
       "case": "malformed_row",
-      "expected_reject_reason": "missing_required_field:product_id",
-      "note": "BAD_ROW,missing_cols is a 2-value row; DictReader fills all 7 header columns so it passes the column-count guard, then fails at missing_required_field:product_id (first truly empty required field after order_id+customer_id). Present in each of the 4 valid partitions; test de-dupes by order_id so only one entry needed.",
+      "expected_reject_reason": "malformed_row",
+      "note": "BAD_ROW,missing_cols is a 2-value row; csv.DictReader fills the remaining 5 header columns with None. extract.py detects these None values and sets _malformed=True before stripping them to ''. validate.py Rule 1 checks this sentinel and rejects as malformed_row. Present in each of the 4 valid partitions; test de-dupes by order_id so only one entry needed.",
       "partition_date": "2025-01-01",
       "file": "orders_2025-01-01.csv"
     }
