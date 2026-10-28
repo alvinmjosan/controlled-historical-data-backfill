@@ -1,0 +1,133 @@
+{
+  "run_id": "run_20261028T160456Z",
+  "generated_at": "2026-10-28T16:05:03.840367+00:00",
+  "checks": {
+    "partition_row_balance": {
+      "description": "rows_in == rows_out + rows_rejected per partition",
+      "passed": true,
+      "details": [
+        {
+          "partition_date": "2025-01-01",
+          "rows_in": 25,
+          "rows_out": 16,
+          "rows_rejected": 9,
+          "sum_out_rejected": 25,
+          "balanced": true,
+          "difference": 0
+        },
+        {
+          "partition_date": "2025-01-02",
+          "rows_in": 25,
+          "rows_out": 16,
+          "rows_rejected": 9,
+          "sum_out_rejected": 25,
+          "balanced": true,
+          "difference": 0
+        },
+        {
+          "partition_date": "2025-01-04",
+          "rows_in": 25,
+          "rows_out": 16,
+          "rows_rejected": 9,
+          "sum_out_rejected": 25,
+          "balanced": true,
+          "difference": 0
+        },
+        {
+          "partition_date": "2025-01-05",
+          "rows_in": 25,
+          "rows_out": 16,
+          "rows_rejected": 9,
+          "sum_out_rejected": 25,
+          "balanced": true,
+          "difference": 0
+        },
+        {
+          "partition_date": "2025-01-06",
+          "rows_in": 0,
+          "rows_out": 0,
+          "rows_rejected": 0,
+          "sum_out_rejected": 0,
+          "balanced": true,
+          "difference": 0
+        }
+      ]
+    },
+    "history_only_rows": {
+      "description": "Rows valid but superseded by a newer event for the same order_id. Written to order_status_history only \u2014 NOT counted as rejected. rows_out = fact_rows + history_only_rows.",
+      "history_only_rows_this_run": 8,
+      "fact_orders_total": 56,
+      "order_status_history_total": 64
+    },
+    "fact_orders_pk_unique": {
+      "description": "fact_orders has no duplicate order_id (PK uniqueness)",
+      "passed": true,
+      "total_rows": 56,
+      "distinct_order_ids": 56
+    },
+    "referential_integrity": {
+      "description": "No orphan customer_id or product_id in fact_orders",
+      "passed": true,
+      "orphan_customers": 0,
+      "orphan_products": 0
+    },
+    "total_amount_reconciliation": {
+      "description": "sum(total_amount) in fact_orders matches recomputed quantity*unit_price",
+      "passed": true,
+      "db_sum_total_amount": 80780.2,
+      "recomputed_sum": 80780.2,
+      "difference": 0.0
+    },
+    "reject_traceability": {
+      "description": "Every rejected record has run_id, source_file, row_number, reject_reason",
+      "passed": true,
+      "total_rejected": 36,
+      "missing_run_id": 0,
+      "missing_source_file": 0,
+      "missing_row_number": 0,
+      "missing_reason": 0
+    },
+    "reject_reason_breakdown": {
+      "description": "Reject reason counts for this run",
+      "details": [
+        {
+          "reason": "missing_required_field:product_id",
+          "count": 4
+        },
+        {
+          "reason": "missing_required_field:customer_id",
+          "count": 4
+        },
+        {
+          "reason": "invalid_unit_price",
+          "count": 4
+        },
+        {
+          "reason": "invalid_status",
+          "count": 4
+        },
+        {
+          "reason": "invalid_reference_product",
+          "count": 4
+        },
+        {
+          "reason": "invalid_reference_customer",
+          "count": 4
+        },
+        {
+          "reason": "invalid_quantity",
+          "count": 4
+        },
+        {
+          "reason": "invalid_event_ts",
+          "count": 4
+        },
+        {
+          "reason": "duplicate_event",
+          "count": 4
+        }
+      ]
+    }
+  },
+  "passed": true
+}

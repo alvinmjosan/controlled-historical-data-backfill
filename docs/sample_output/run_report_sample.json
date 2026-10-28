@@ -1,0 +1,100 @@
+{
+  "run_id": "run_20261028T160456Z",
+  "final_status": "PARTIAL",
+  "partitions_requested": [
+    "2025-01-01",
+    "2025-01-02",
+    "2025-01-03",
+    "2025-01-04",
+    "2025-01-05",
+    "2025-01-06"
+  ],
+  "args": {
+    "source_dir": "data/sample",
+    "db_path": "D:\\yotta\\output\\warehouse.db",
+    "max_workers": 4,
+    "max_retries": 2,
+    "force": true,
+    "dry_run": false
+  },
+  "started_at": "2026-10-28T16:04:56.427161+00:00",
+  "ended_at": "2026-10-28T16:04:56.457283+00:00",
+  "status": "PARTIAL",
+  "params": "{\"partitions\": [\"2025-01-01\", \"2025-01-02\", \"2025-01-03\", \"2025-01-04\", \"2025-01-05\", \"2025-01-06\"], \"source_dir\": \"data/sample\", \"max_workers\": 4, \"max_retries\": 2, \"force\": true, \"inject_failure_date\": null}",
+  "partitions_total": 6,
+  "partitions_success": 5,
+  "partitions_failed": 1,
+  "rows_in": 100,
+  "rows_out": 64,
+  "rows_rejected": 36,
+  "failure_reason": null,
+  "late_arriving": 4,
+  "partitions": [
+    {
+      "partition_date": "2025-01-01",
+      "status": "SUCCESS",
+      "rows_in": 25,
+      "rows_out": 16,
+      "rows_history_only": 2,
+      "rows_rejected": 9,
+      "late_arriving": 1,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "partition_date": "2025-01-02",
+      "status": "SUCCESS",
+      "rows_in": 25,
+      "rows_out": 16,
+      "rows_history_only": 2,
+      "rows_rejected": 9,
+      "late_arriving": 1,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "partition_date": "2025-01-03",
+      "status": "FAILED",
+      "rows_in": 0,
+      "rows_out": 0,
+      "rows_history_only": 0,
+      "rows_rejected": 0,
+      "late_arriving": 0,
+      "attempts": 1,
+      "error": "schema_mismatch: missing columns ['status']"
+    },
+    {
+      "partition_date": "2025-01-04",
+      "status": "SUCCESS",
+      "rows_in": 25,
+      "rows_out": 16,
+      "rows_history_only": 2,
+      "rows_rejected": 9,
+      "late_arriving": 1,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "partition_date": "2025-01-05",
+      "status": "SUCCESS",
+      "rows_in": 25,
+      "rows_out": 16,
+      "rows_history_only": 2,
+      "rows_rejected": 9,
+      "late_arriving": 1,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "partition_date": "2025-01-06",
+      "status": "SUCCESS",
+      "rows_in": 0,
+      "rows_out": 0,
+      "rows_history_only": 0,
+      "rows_rejected": 0,
+      "late_arriving": 0,
+      "attempts": 1,
+      "error": null
+    }
+  ]
+}
