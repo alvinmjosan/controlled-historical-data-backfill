@@ -1,6 +1,6 @@
 # Backfill Pipeline — Historical Data Backfill System
 
-> **GitHub**: _Add your repository URL here after pushing_
+> **GitHub**: https://github.com/alvinmjosan/controlled-historical-data-backfill
 
 > **AI Usage**: [Disclosure & decisions](ai_usage/AI_USAGE.md) · [Prompt history](ai_usage/prompt_history.md)
 
@@ -93,8 +93,8 @@ Source CSVs (data/sample/orders/orders_YYYY-MM-DD.csv)
 
 ```bash
 # 1. Clone / navigate to project
-git clone https://github.com/YOUR_USERNAME/backfill-pipeline.git
-cd backfill-pipeline
+git clone https://github.com/alvinmjosan/controlled-historical-data-backfill.git
+cd controlled-historical-data-backfill
 
 # 2. Create and activate virtual environment
 python -m venv venv
