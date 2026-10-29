@@ -113,8 +113,8 @@ python --version
 
 ### Generate sample data
 ```bash
-# Small sample (committed to data/sample/)
-python scripts/generate_data.py --days 5 --rows-per-day 20 --seed 42 --output-dir data/sample
+# Small sample (committed to data/sample/) — 6 days: 4 normal + 1 schema-change (day 3) + 1 empty file (day 6)
+python scripts/generate_data.py --days 6 --rows-per-day 20 --seed 42 --output-dir data/sample
 
 # Large dataset for benchmarking
 python scripts/generate_data.py --days 30 --rows-per-day 4000 --seed 42 --output-dir data/generated
@@ -147,7 +147,8 @@ python -m backfill --source-dir data/sample --start-date 2025-01-01 --end-date 2
   Est. runtime     : 0.0s (at 5,000 rows/sec)
 ============================================================
 ```
-*(2025-01-03 is the intentional schema-change partition; 2025-01-06 is the intentional empty file)*
+*(2025-01-03 is the intentional schema-change partition; 2025-01-06 is the intentional empty file)*  
+*(The SCHEMA_ERR and empty-file partitions contribute 0 rows to the Total rows count — only the 4 normal days × 25 rows = 100 are counted)*
 
 ### Run backfill
 ```bash
@@ -181,11 +182,12 @@ Remove-Item output\warehouse.db -ErrorAction SilentlyContinue
 python -m backfill --source-dir data/sample --start-date 2025-01-01 --end-date 2025-01-06 --force --inject-failure-date 2025-01-04
 ```
 ```
+# (log lines abridged — real output includes timestamps and run_id= prefix on every line)
 INFO  [1/6] 2025-01-02 SUCCESS rows_in=25 rows_out=16 rows_rejected=9
 INFO  [2/6] 2025-01-01 SUCCESS rows_in=25 rows_out=16 rows_rejected=9
 INFO  [3/6] 2025-01-05 SUCCESS rows_in=25 rows_out=16 rows_rejected=9
 ERROR [4/6] partition=2025-01-03 FAILED error=schema_mismatch: missing columns ['status']
-ERROR [5/6] partition=2025-01-04 FAILED error=Injected failure (all 3 attempts)
+ERROR [5/6] partition=2025-01-04 FAILED error=Injected failure (all 3 attempts: 1 initial try + 2 retries)
 INFO  [6/6] 2025-01-06 SUCCESS rows_in=0 rows_out=0 rows_rejected=0
 DONE  status=PARTIAL partitions_success=4 partitions_failed=2
 ```
@@ -263,7 +265,7 @@ python scripts/benchmark.py --clean
 | Re-run with --force | All partitions reprocessed, including SUCCESS |
 | Partition FAILED on last run | Automatically **retried** on next run |
 | Partition stale RUNNING | Treated as FAILED, retried on next run |
-| --max-retries N | Each partition retried up to N times before marking FAILED |
+| --max-retries N | Each partition gets 1 initial try + N retries (default N=2, so 3 total attempts) before marking FAILED |
 | One partition fails | Others continue; final status = PARTIAL |
 | Same input rerun | Produces **identical** row counts (idempotent) |
 
@@ -391,7 +393,7 @@ ORDER BY event_ts;
 
 ## Test Results
 
-Full output saved to [docs/test_results.txt](docs/test_results.txt) *(abridged below — full per-test output in that file)*.
+Full output saved to [docs/test_results.txt](docs/test_results.txt).
 
 ```
 $ python -m pytest tests/ -v
@@ -531,7 +533,7 @@ The rate (rows/sec) is directly comparable — it is a steady-state throughput f
 | executemany, 1 transaction | 23,816 | 25 partitions × 4,000 rows |
 | row-by-row, 1 commit/INSERT | 732 | 3 partitions × 4,000 rows (rate comparable) |
 
-**Batch INSERT speedup: ~32.5x** (measured on this machine).
+**Batch INSERT speedup: ~30x** (measured on this machine; exact ratio varies with partition size and OS scheduling).
 
 ### Default run (with edge-case partitions, status = PARTIAL)
 
