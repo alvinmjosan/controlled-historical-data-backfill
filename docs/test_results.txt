@@ -1,5 +1,5 @@
 ﻿============================= test session starts =============================
-platform win32 -- Python 3.13.3, pytest-9.2.0, pluggy-1.7.0 -- C:\Users\playg\Desktop\python\python.exe
+platform win32 -- Python 3.13.3, pytest-9.2.0, pluggy-1.7.0
 cachedir: .pytest_cache
 rootdir: D:\yotta
 plugins: anyio-4.15.1, langsmith-0.14.3
@@ -93,3 +93,4 @@ tests/test_validate.py::test_malformed_row_too_few_columns PASSED        [ 98%]
 tests/test_validate.py::test_reject_id_is_deterministic PASSED           [100%]
 
 ============================= 86 passed in 1.53s ==============================
+

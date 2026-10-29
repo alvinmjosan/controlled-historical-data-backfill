@@ -2,9 +2,12 @@
 
 > **GitHub**: _Add your repository URL here after pushing_
 
+> **AI Usage**: [Disclosure & decisions](ai_usage/AI_USAGE.md) · [Prompt history](ai_usage/prompt_history.md)
+
 A controlled historical backfill pipeline for daily e-commerce orders. Supports dry-run estimates, bounded parallelism, idempotent writes, progress tracking, and safe restart. Built with Python stdlib + SQLite only.
 
 ---
+
 
 ## Architecture & Data Flow
 
