@@ -122,7 +122,7 @@ def run_reconcile(
     checks["history_only_rows"] = {
         "description": (
             "Rows valid but superseded by a newer event for the same order_id. "
-            "Written to order_status_history only — NOT counted as rejected. "
+            "Written to order_status_history only - NOT counted as rejected. "
             "rows_out = fact_rows + history_only_rows."
         ),
         "history_only_rows_this_run": history_only_total,

@@ -65,7 +65,7 @@ ORDER BY count DESC;
 
 | reject_reason | count |
 |---|---|
-| missing_required_field:product_id | 4 |
+| malformed_row | 4 |
 | missing_required_field:customer_id | 4 |
 | invalid_unit_price | 4 |
 | invalid_status | 4 |
@@ -77,8 +77,10 @@ ORDER BY count DESC;
 
 9 reject types × 4 partitions = 36 total rejected rows (out of 100 source rows across 4 successful partitions).
 
-> **Note**: The `BAD_ROW,missing_cols` row in each partition is rejected as `missing_required_field:product_id`
-> because `csv.DictReader` fills all 7 header slots from the 2-column row, leaving `product_id` empty.
+> **Note**: The `BAD_ROW,missing_cols` row in each partition has only 2 CSV fields under a 7-column
+> header. `extract.py` detects the `None` values DictReader fills in for the missing columns,
+> sets `_malformed=True`, and `validate.py` Rule 1 rejects it as `malformed_row` — before any
+> field-level checks run.
 
 ---
 

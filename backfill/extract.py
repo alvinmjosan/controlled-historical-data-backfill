@@ -88,12 +88,22 @@ def read_partition(
 
             rows: list[dict] = []
             for row_number, raw_row in enumerate(reader, start=1):
-                # csv.DictReader fills missing columns with None when a row has
-                # fewer fields than the header (short/malformed row).  Detect
-                # this BEFORE stripping None→"" so validate.py can reject as
-                # malformed_row rather than missing_required_field.
-                is_malformed = any(v is None for v in raw_row.values())
-                row = {k.strip(): (v.strip() if v is not None else "") for k, v in raw_row.items()}
+                # csv.DictReader signals malformed rows in two ways:
+                #   short row: fills missing header columns with None VALUES
+                #   long row:  stores overflow values under the None KEY
+                # Both are detected here, before None→"" stripping, so that
+                # validate.py Rule 1 can reject them as malformed_row.
+                is_malformed = (
+                    any(v is None for v in raw_row.values())  # short row
+                    or None in raw_row                         # long row
+                )
+                # Skip the None key (overflow bucket for long rows) and
+                # convert None values (missing fields in short rows) to "".
+                row = {
+                    k.strip(): (v.strip() if v is not None else "")
+                    for k, v in raw_row.items()
+                    if k is not None
+                }
                 row["_row_number"] = row_number
                 if is_malformed:
                     row["_malformed"] = True

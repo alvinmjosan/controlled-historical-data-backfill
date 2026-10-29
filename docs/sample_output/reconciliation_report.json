@@ -1,6 +1,6 @@
 {
   "run_id": "run_20261028T174319Z",
-  "generated_at": "2026-10-28T17:43:30.553990+00:00",
+  "generated_at": "2026-10-28T17:52:44.740614+00:00",
   "checks": {
     "partition_row_balance": {
       "description": "rows_in == rows_out + rows_rejected per partition",
@@ -54,7 +54,7 @@
       ]
     },
     "history_only_rows": {
-      "description": "Rows valid but superseded by a newer event for the same order_id. Written to order_status_history only \u2014 NOT counted as rejected. rows_out = fact_rows + history_only_rows.",
+      "description": "Rows valid but superseded by a newer event for the same order_id. Written to order_status_history only - NOT counted as rejected. rows_out = fact_rows + history_only_rows.",
       "history_only_rows_this_run": 8,
       "fact_orders_total": 56,
       "order_status_history_total": 64
