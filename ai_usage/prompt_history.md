@@ -1,18 +1,42 @@
 # Prompt History
 
-All prompts submitted to the AI coding assistant (Antigravity / Claude Sonnet),
-in chronological order across all sessions.
+Prompts submitted to AI tools while building this project, in chronological order. Responses are not included.
 
-Responses are not included here. This file is a reconstruction from conversation
-transcripts stored locally by the tool; the tool does not offer a native export.
-Timestamps are local time (IST, UTC+5:30).
+**Two tools were used:**
+1. **Claude (claude.ai chat)**: Part A below.
+2. **Antigravity (agentic coding assistant backed by Claude Sonnet)**: Part B below.
+
+**Important:**
+- Most Part B prompts (Prompts 2-11) are review feedback that was written by Claude in the chat (Part A) and pasted by me into Antigravity.
+- Antigravity does not export logs, so Part B is a reconstruction from locally stored conversation transcripts.
+- Several Part A messages were pasted documents (the problem statement, agent plans, README versions, test output, the YottaFlex PDFs). Those are summarised in brackets rather than repeated.
+- Timestamps are local time (IST, UTC+5:30).
 
 ---
 
-## Session 1 — 2026-10-28 ~13:32 IST
+## Part A: Claude chat (claude.ai)
+
+1. [Pasted the problem statement] "generate a prompt to complete this project in simple way possible and not to make it complex, everything in the problem statement should be covered completely and git version should be maintained with each crucial update, tasks must be perfectly build, dont make things complex, dont miss anything form the problem state ment and task"
+2. "i want somenthing that is not complex and yet sucessfully completes the problem state ment"
+3. "can you give me as simple break down of what the project is simple way possible"
+4. [Pasted the agent's implementation plan for review]
+5. [Pasted the revised "Bug Fixes & Gap Closures" plan for review]
+6. "are these covered" [with the list of review points]
+7. [Pasted the agent's project analysis and the README for review]
+8. [Pasted README versions, pytest output, reconciliation output and benchmark transcripts for review. Roughly 10 such messages.]
+9. [Pasted the YottaFlex Candidate FAQ and Submission Guidelines PDFs]
+10. [Pasted AI_USAGE.md and prompt_history.md for review]
+
+---
+
+## Part B: Antigravity (Claude Sonnet)
+
+Prompt 1 is abbreviated: its full text lives in a local Antigravity transcript that is not part of this repository. The build prompt given to the agent was written with Claude's help (see Part A, items 1-3).
+
+### Session 1 — 2026-10-28 ~13:32 IST
 **Conversation:** `97140b9b` — *"Data Engineering Historical Backfill Pipeline"*
 
-### Prompt 1 — Initial problem statement
+#### Prompt 1 — Initial build prompt (problem statement and build instructions)
 
 > **Problem statement**
 > Read it carefully. Your build should cover every point below.

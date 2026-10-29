@@ -573,11 +573,9 @@ See [docs/performance.md](docs/performance.md) for full analysis and threading m
 
 ## Possible Next Steps
 
-- **Orchestration**: Wrap with Apache Airflow or Prefect DAGs for scheduling and dependency management.
-- **Storage**: Migrate target to PostgreSQL (for concurrent writes) or Parquet/Delta Lake (for analytics).
-- **Parallelism**: Replace ThreadPoolExecutor with multiprocessing.Pool for CPU-bound transforms (GIL bypass).
-- **Schema Registry**: Integrate Great Expectations or Pydantic for declarative schema validation.
-- **Alerting**: Add PagerDuty/Slack notifications on PARTIAL/FAILED runs.
-- **Streaming**: Support Kafka/Kinesis as a source alongside batch CSV.
-- **Incremental Reference Data**: Support SCD Type 2 for dim_customers/dim_products.
-- **Metrics Export**: Push run metrics to Prometheus/Grafana for dashboarding.
+- **Multiprocessing for validate/transform**: the benchmark showed no gain from threads
+  (0.91x) because of the GIL and the single SQLite writer, so process-based workers are the natural next step.
+- **PostgreSQL or Parquet target**: removes the single-writer limit and the one-process-at-a-time restriction.
+- **Streaming reads for large partitions**: each partition is currently loaded fully into memory.
+- **Run locking**: a lock file or DB-level lock so two backfills cannot start against the same database.
+- **Orchestration and alerting** (Airflow/Prefect, Slack on PARTIAL/FAILED): to schedule backfills and notify the operator.

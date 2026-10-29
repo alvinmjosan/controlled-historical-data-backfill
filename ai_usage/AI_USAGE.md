@@ -1,73 +1,65 @@
 # AI Usage Disclosure
 
-## Tool used
+## Tools used
 
-**Antigravity (Google DeepMind)** — an agentic AI coding assistant backed by Claude Sonnet.
-All prompts were submitted through the Antigravity chat interface.
-The tool cannot export a full prompt/response log, so `prompt_history.md` is a reconstruction
-from the conversation transcripts stored locally by the tool.
-
----
+1. **Antigravity (Google DeepMind)**, an agentic coding assistant backed by Claude Sonnet.
+   It wrote and edited the code, tests, data, and docs in this repo. It cannot export a prompt log,
+   so `prompt_history.md` is a reconstruction from locally stored conversation transcripts.
+2. **Claude (claude.ai chat)**, used outside the repo to write the initial agent prompt,
+   simplify it, review each iteration of the agent's output against the problem statement,
+   and draft follow-up fix instructions. Several of the later prompts in `prompt_history.md`
+   are review feedback written by Claude in that chat and pasted by me into Antigravity.
 
 ## Where AI accelerated my work
 
 | Area | Role of AI |
 |---|---|
-| Code scaffolding | Generated initial module stubs (`extract.py`, `validate.py`, `transform.py`, `load.py`, `reconcile.py`, `controller.py`, `__main__.py`) from my specification |
-| Test writing | Wrote the majority of unit and integration tests based on my descriptions of the scenarios |
-| README drafting | Drafted section text, tables, and code blocks; I reviewed and corrected every section |
-| Data generator | Generated `scripts/generate_data.py` from my spec (6-day sample, seed=42, all edge-case rows) |
-| Benchmark script | Generated `scripts/benchmark.py` and `docs/performance.md` from my spec |
+| Code scaffolding | Antigravity generated the modules (`extract.py`, `validate.py`, `transform.py`, `load.py`, `reconcile.py`, `controller.py`, `__main__.py`) from the specification in the agent prompt |
+| Tests | Antigravity wrote most unit and integration tests from scenario descriptions |
+| Data generator and benchmark | Antigravity generated `scripts/generate_data.py`, `scripts/benchmark.py`, and `docs/performance.md` |
+| README and docs | Antigravity drafted them; Claude's review flagged inconsistencies, which I relayed back for fixing |
+| Review | Claude reviewed each iteration against the problem statement and listed gaps |
 
----
+## Where I relied on AI heavily
 
-## Where I relied on the AI heavily
+- The pipeline modules and the test suite were largely AI-generated in long agent sessions.
+- The two `test_extract.py` malformed-row tests were added after a Claude review pointed out that the fix had no unit test.
 
-- The pipeline modules (`extract.py`, `validate.py`, `transform.py`, `load.py`, `controller.py`) were largely AI-generated within a single long session.
-- The test suite (`test_controller.py`, `test_validate.py`, `test_transform.py`, `test_load.py`, `test_reconcile.py`) was written by the AI based on my descriptions of the required test cases.
-- The two new `test_extract.py` malformed-row tests were added in a follow-up prompt after I identified the gap.
+## What I reviewed and validated
 
----
+- **BAD_ROW label problem**: the agent first changed the expected label to match incorrect behavior.
+  A Claude review flagged that the labels were following the code. I relayed this, and the agent fixed
+  `extract.py` to flag short and long rows as `_malformed`, and restored the `malformed_row` label.
+- **Benchmark claims**: a review flagged the "32.5x" headline as overstated, since row-by-row was
+  measured on only 3 partitions. I had it softened to "~30x" and the method documented.
+- **README consistency**: reviews flagged the stale dry-run date, the `--days 5` vs `--days 6`
+  mismatch, the stale run_id, and the placeholder GitHub URL, and I had each corrected.
+- **Test and run results**: `[VERIFY: choose one]`
+  - "I ran `python -m pytest tests/ -v` and the clean-clone flow myself (86 passed)", **or**
+  - "The agent ran these commands and I reviewed the outputs; I also ran a fresh clone and pytest myself."
 
-## What I reviewed, changed, and validated
-
-- **Caught the BAD_ROW label problem**: the AI's first fix changed the expected label to match wrong code. I identified that the code and spec disagreed and directed the AI to fix `extract.py` instead (detect `None` values from `csv.DictReader` and mark rows as `_malformed=True`).
-- **Ran all tests myself**: `python -m pytest tests/ -v` — 86 passed, confirmed locally.
-- **Ran the clean-environment flow**: verified generate → dry-run → backfill → rerun → inject failure → resume → `--status` → `--reconcile` all produce the outputs shown in the README.
-- **Checked benchmark claims**: caught the "32.5x" headline overstating results from a small sample; directed the AI to soften it to "~30x".
-- **Reviewed all README sections**: caught the stale dry-run date (`2025-01-05` → `2025-01-06`), collapsed test lines, stale run_id in Step 3, "in the same session" wording, and the `--days 5` vs `--days 6` inconsistency.
-- **Reviewed the retry semantics**: confirmed `range(1, max_retries + 2)` gives 1 initial try + 2 retries = 3 total attempts.
-
----
-
-## Decisions I own
+## Decisions and design
 
 | Decision | Rationale |
 |---|---|
-| **SQLite as the target** | Zero external dependencies; required by the constraint of Python stdlib + SQLite only. WAL mode used for better concurrent reads. |
-| **Partition overwrite (DELETE + INSERT) not upsert** | Makes reruns idempotent per partition; cleaner than partial-row merges for date-partitioned batch loads. |
-| **Single writer thread** | Avoids SQLite lock contention when multiple threads produce results concurrently. |
-| **Retry semantics** | `--max-retries N` means N retries after the initial attempt (N=2 default → 3 total tries). Exponential backoff with jitter between attempts. |
-| **Reject-ID as SHA-256 of source_file + row_number** | Deterministic so idempotent reruns don't duplicate rejected records. |
-| **`fact_orders` keeps only the latest event per order_id** | Business rule: analytical consumers want current state. Full history goes to `order_status_history`. |
-| **`history_only` row category** | Rows that are valid but superseded by a newer event; counted in `rows_out` so partition row balance always holds (rows_in = rows_out + rows_rejected). |
-
----
+| SQLite target, stdlib only | No external services; runs locally from a clean environment |
+| Partition overwrite plus guarded upsert | Each partition's fact rows are deleted and reinserted in one transaction, so reruns are idempotent; the fact upsert only applies when the new `event_ts` is >= the existing one, so late data cannot overwrite newer rows |
+| Single writer (main thread) | Workers read and validate in parallel; one thread writes to avoid SQLite lock contention |
+| Retries | `--max-retries N` means 1 initial try + N retries (default 3 attempts). Backoff between attempts `[VERIFY in controller.py: exponential with jitter, or exponential only; state exactly what the code does]` |
+| Deterministic `reject_id` | SHA-256 of `source_file + row_number`, so reruns do not duplicate rejects |
+| `fact_orders` keeps latest event per order | Current state for consumers; full history in `order_status_history` |
+| `history_only` rows | Valid rows superseded by a newer event; counted in `rows_out` so `rows_in = rows_out + rows_rejected` holds |
 
 ## Commit history note
 
-The work was built interactively with an AI agent over a single session and committed in logical groups
-(DB schema and load, controller and CLI, reconcile, tests, benchmark, docs). The commit timestamps
-reflect that development pattern. Artifact timestamps in the Antigravity tool can be used to verify
-the 72-hour window.
+The work was built interactively with an AI agent and committed in logical groups
+(skeleton, generator and data, pipeline modules, controller and CLI, tests, benchmark, docs).
+The commits were made close together, and their timestamps are unmodified.
 
----
+## What I can explain
 
-## What a reviewer can ask me to explain
-
-I can walk through:
-- The validation order in `validate.py` (malformed check → required fields → type/range → status whitelist → reference keys → duplicate detection)
-- The idempotent load in `load.py` (DELETE by partition_date, then INSERT fact_orders; INSERT OR IGNORE for status_history; UPSERT for dims; deterministic reject_id prevents duplicate rejects)
-- The restart logic in `controller.py` (at startup, RUNNING rows are treated as FAILED; SUCCESS rows are skipped unless `--force`; FAILED rows are retried)
-- The dry-run path (reads and validates in memory, no DB writes, prints partition-level estimates)
-- The reconciliation checks (row balance, PK uniqueness, FK integrity, sum(total_amount) recompute, reject traceability)
+- The validation order in `validate.py`
+- The idempotent load in `load.py`
+- The restart logic in `controller.py`
+- The dry-run path
+- The reconciliation checks
