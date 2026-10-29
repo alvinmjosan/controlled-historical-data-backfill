@@ -128,8 +128,8 @@ or disk). CPU-bound validation gets limited benefit from threads due to the GIL.
    system would use a schema registry or validation framework (Great Expectations, Pydantic).
 4. **No alerting**: Failures are logged and recorded in the DB, but operators must actively
    query `backfill_runs` or read log files to discover failures.
-5. **Simple retry**: Retry uses a fixed sleep back-off. Production would use exponential
-   back-off with jitter.
+5. **Simple retry**: Retry uses a linear back-off (0.1 s × attempt number) with no jitter.
+   Production would use exponential back-off with jitter.
 6. **dim tables not SCD Type 2**: Customer/product changes overwrite the previous record
    (SCD Type 1). Adding SCD Type 2 would require effective date columns and a valid_to
    sentinel.

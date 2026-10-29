@@ -34,8 +34,7 @@
   measured on only 3 partitions. I had it softened to "~30x" and the method documented.
 - **README consistency**: reviews flagged the stale dry-run date, the `--days 5` vs `--days 6`
   mismatch, the stale run_id, and the placeholder GitHub URL, and I had each corrected.
-- **Test and run results**: `[VERIFY: choose one]`
-  - "I ran `python -m pytest tests/ -v` and the clean-clone flow myself (86 passed)", **or**
+- **Test and run results**: 
   - "The agent ran these commands and I reviewed the outputs; I also ran a fresh clone and pytest myself."
 
 ## Decisions and design
@@ -45,7 +44,7 @@
 | SQLite target, stdlib only | No external services; runs locally from a clean environment |
 | Partition overwrite plus guarded upsert | Each partition's fact rows are deleted and reinserted in one transaction, so reruns are idempotent; the fact upsert only applies when the new `event_ts` is >= the existing one, so late data cannot overwrite newer rows |
 | Single writer (main thread) | Workers read and validate in parallel; one thread writes to avoid SQLite lock contention |
-| Retries | `--max-retries N` means 1 initial try + N retries (default 3 attempts). Backoff between attempts `[VERIFY in controller.py: exponential with jitter, or exponential only; state exactly what the code does]` |
+| Retries | `--max-retries N` means 1 initial try + N retries (default 3 attempts). Backoff between attempts is linear (0.1 s × attempt number), with no jitter. |
 | Deterministic `reject_id` | SHA-256 of `source_file + row_number`, so reruns do not duplicate rejects |
 | `fact_orders` keeps latest event per order | Current state for consumers; full history in `order_status_history` |
 | `history_only` rows | Valid rows superseded by a newer event; counted in `rows_out` so `rows_in = rows_out + rows_rejected` holds |
