@@ -211,6 +211,7 @@ DONE  status=PARTIAL partitions_success=1 partitions_failed=1
 python -m backfill --status
 ```
 ```
+# (SKIPPED = no work done this run, data from the earlier run is intact)
 Latest run: run_20261029T063711Z  status=PARTIAL  started=2026-10-29T06:37:11.088828+00:00
 
 partition_date   status      rows_in  rows_out  hist_only  rejected  late  tries  error
